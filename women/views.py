@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseNotFound
 
 from women.models import Category, Women
@@ -40,18 +40,27 @@ def login(request):
 def pageNotFound(request,exeption):
     return HttpResponseNotFound('<h1> Page not found :(</h1>')
 
-def show_post(request,post_id):
-    return HttpResponse(f"Статья с айди = {post_id}")
+def show_post(request,post_slug):
+    post = get_object_or_404(Women ,slug=post_slug)
+
+    contex = {
+        'post': post,
+        'menu' : menu,
+        'title' : post.title,
+        'cat_selected' : post.cat
+    }
+
+    return render (request,'women/post.html',context=contex)
 
 def show_category(request,cat_id):
     posts = Women.objects.filter(cat_id=cat_id)
-
+    print(posts,"-------------------------------------------------")
     context =  {
         'title':'Ототброжение по рубрикам ',
         'posts': posts,
     
         'menu' : menu,
-        'cat_selected': 0,
+        'cat_selected': cat_id,
         
     }
     return render(request,'women/index.html',context=context)
