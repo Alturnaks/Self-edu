@@ -22,7 +22,7 @@ def index(request):
     context =  {
         'title':'Главная страница',
         'posts': posts,
-        
+         
         'menu' : menu,
         'cat_selected': 0,
         
@@ -31,18 +31,14 @@ def index(request):
 
 def addpage(request):
     if request.method == 'POST':
-        form = AddPage(request.POST)
+        form = AddPage(request.POST, request.FILES)
         if form.is_valid():
-            try:
-                Women.objects.create(**form.cleaned_data)
-
-                return redirect('home')
-            except:
-                form.add_error(None, 'Ошибка добаления поста')
+            form.save()
+            return redirect('home')
     else:
         form = AddPage()
-
-    return render (request, 'women/addpage.html',{'form':form,'menu':menu,'title':'Добавдение статьи'})
+ 
+    return render(request, 'women/addpage.html',{'form':form,'menu':menu,'title':'Добавдение статьи'})
 
 
 
