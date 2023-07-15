@@ -31,6 +31,7 @@ def about(request):
 
 
 class WomenHome(DataMixin , ListView):
+    
     model = Women
     template_name = 'women/index.html'
     context_object_name = 'posts'
